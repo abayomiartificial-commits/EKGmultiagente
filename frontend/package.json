@@ -1,0 +1,11 @@
+{
+  "name": "ekg-multiagente-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static frontend for EKG Multiagente",
+  "scripts": {
+    "build": "echo \"No build step required - static site\"",
+    "start": "echo \"Serve with any static server, e.g., npx serve\""
+  },
+  "devDependencies": {}
+}

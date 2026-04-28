@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EKG Multi‑Agente – Resultado</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="result-header">
+      <h1 class="title">Reporte de Análisis de EKG</h1>
+      <div id="urgencyBadge" class="badge badge-normal">NORMAL</div>
+    </header>
+    <section class="result-body">
+      <div class="ekg-image">
+        <img id="ekgImg" alt="EKG cargado" />
+      </div>
+      <div class="report-section">
+        <h2 class="section-header">Resumen Clínico</h2>
+        <div id="reportContent">
+          <p>El reporte será generado aquí una vez el backend esté disponible.</p>
+        </div>
+        <button class="btn btn-primary" id="newAnalysisBtn">Nuevo Análisis</button>
+      </div>
+    </section>
+  </main>
+  <script>
+    // Load image from sessionStorage (demo only)
+    const imgEl = document.getElementById('ekgImg');
+    const stored = sessionStorage.getItem('ekgImage');
+    if (stored) {
+      imgEl.src = stored;
+    }
+    document.getElementById('newAnalysisBtn').addEventListener('click', () => {
+      sessionStorage.removeItem('ekgImage');
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CardioAnalyze Pro - Result Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-container": "#4e6874",
+                      "primary-container": "#0b5394",
+                      "on-background": "#191c1d",
+                      "surface-variant": "#e1e3e4",
+                      "surface-dim": "#d9dadb",
+                      "secondary-container": "#cbe7f5",
+                      "inverse-surface": "#2e3132",
+                      "surface-tint": "#2260a1",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed-dim": "#a4c9ff",
+                      "on-secondary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed": "#311300",
+                      "secondary-fixed-dim": "#afcbd8",
+                      "on-error": "#ffffff",
+                      "inverse-on-surface": "#f0f1f2",
+                      "on-secondary-fixed-variant": "#304a55",
+                      "on-primary-fixed": "#001c39",
+                      "on-tertiary-fixed-variant": "#723600",
+                      "tertiary-fixed-dim": "#ffb787",
+                      "surface": "#f8f9fa",
+                      "tertiary-container": "#833f00",
+                      "secondary": "#48626e",
+                      "tertiary-fixed": "#ffdcc7",
+                      "on-primary-container": "#a2c8ff",
+                      "inverse-primary": "#a4c9ff",
+                      "surface-bright": "#f8f9fa",
+                      "tertiary": "#602d00",
+                      "on-primary-fixed-variant": "#004883",
+                      "surface-container-low": "#f3f4f5",
+                      "on-surface-variant": "#424750",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#191c1d",
+                      "surface-container-highest": "#e1e3e4",
+                      "secondary-fixed": "#cbe7f5",
+                      "on-primary": "#ffffff",
+                      "primary": "#003c6f",
+                      "background": "#f8f9fa",
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#c2c6d2",
+                      "surface-container-high": "#e7e8e9",
+                      "primary-fixed": "#d4e3ff",
+                      "error": "#ba1a1a",
+                      "outline": "#727781",
+                      "on-secondary-fixed": "#021f29",
+                      "surface-container": "#edeeef",
+                      "on-tertiary-container": "#ffb584"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "section-gap": "32px",
+                      "stack-comfortable": "16px",
+                      "gutter": "16px",
+                      "stack-compact": "8px",
+                      "container-margin": "24px"
+              },
+              "fontFamily": {
+                      "h1-report-title": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "h2-section-header": [
+                              "Inter"
+                      ],
+                      "data-mono": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "h1-report-title": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h2-section-header": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "data-mono": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background antialiased pb-20 md:pb-0 md:pl-80 pt-16">
+<!-- TopAppBar -->
+<header class="fixed top-0 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-950 flex justify-between items-center w-full px-4 h-16 z-50 flat no shadows">
+<div class="flex items-center gap-4">
+<button class="text-blue-700 dark:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-900 transition-colors duration-150 ease-in-out p-2 rounded-full flex items-center justify-center md:hidden">CONFIRMAR DIAGNÓSTICO</button>
+<span class="text-xl font-black text-blue-900 dark:text-blue-200 tracking-tighter">CardioAnalyze Pro</span>
+</div>
+<div class="flex items-center">
+<button class="text-blue-700 dark:text-blue-400 font-inter tracking-tight text-sm font-semibold uppercase hover:bg-gray-50 dark:hover:bg-slate-900 transition-colors duration-150 ease-in-out px-4 py-2 rounded-DEFAULT">CONFIRMAR DIAGNÓSTICO</button>
+</div>
+</header>
+<!-- NavigationDrawer (Desktop) -->
+<nav class="hidden md:flex fixed left-0 top-0 z-40 flex-col h-screen w-80 border-r border-gray-200 dark:border-gray-800 bg-[#F5F5F5] dark:bg-slate-900 pt-16 flat no shadows">
+<!-- Header -->
+<div class="p-gutter border-b border-outline-variant/30 flex items-center gap-stack-comfortable">
+<div class="w-12 h-12 rounded-full bg-surface-variant overflow-hidden flex-shrink-0">
+<img alt="Clinician Portrait" class="w-full h-full object-cover" data-alt="professional headshot of male doctor in scrubs looking confident clinical lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUTgQYmKywNrsoI5GyYQsJAqOrIp5GG7CWySHgT6bopGxOxnjfJXVWKXMujDc09unyNu15-S45D0pA1JvzEps80a7IDMnEQUGONIxjQy1tHqPsmEk9gwvLTTyp2zqLxAQBZtH7ZdrVVIRuxmwFyJGcIJMDmfPaytRSkClnbIHmm1--5PcVDF34GOVbKkteqNq_4lH59SLatZcKgT_4BZZbJUrCsxKMLU_IaImGYgBhsMbc1Ex3Yn7edD3hMLoVDqSB4w0csIUj-g"/>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md font-semibold text-on-surface">Dr. Aris Thorne</span>
+<span class="font-body-sm text-on-surface-variant">Cardiology Dept.</span>
+<span class="font-label-caps text-outline">Hospital ID: 8829</span>
+</div>
+</div>
+<!-- Navigation Items -->
+<div class="flex flex-col py-stack-compact font-inter text-sm antialiased flex-grow">
+<a class="flex items-center gap-4 px-6 py-4 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 active:opacity-80 transition-all hover:bg-gray-200 dark:hover:bg-slate-700" href="#">
+<span class="material-symbols-outlined">ulna_radius</span>
+<span>Cola de Pacientes</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 active:opacity-80 transition-all hover:bg-gray-200 dark:hover:bg-slate-700" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span>Historial de Diagnósticos</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 active:opacity-80 transition-all hover:bg-gray-200 dark:hover:bg-slate-700" href="#">
+<span class="material-symbols-outlined">emergency_home</span>
+<span>Alertas Críticas</span>
+</a>
+<div class="mt-auto">
+<a class="flex items-center gap-4 px-6 py-4 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 active:opacity-80 transition-all hover:bg-gray-200 dark:hover:bg-slate-700" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Configuración</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="p-gutter md:p-container-margin max-w-[1024px] mx-auto flex flex-col gap-section-gap">
+<!-- Clinical Alert Header -->
+<div class="bg-error-container border border-error/30 rounded-DEFAULT overflow-hidden">
+<div class="h-2 w-full bg-error"></div>
+<div class="p-stack-comfortable flex items-start gap-stack-comfortable">
+<span class="material-symbols-outlined text-error mt-1" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<h2 class="font-h2-section-header text-on-error-container">Nivel de Urgencia</h2>
+<span class="bg-error text-on-error font-label-caps px-2 py-1 rounded-DEFAULT border-l-2 border-on-error">ALTA</span>
+</div>
+<p class="font-body-sm text-on-error-container/80">Se requiere revisión clínica inmediata. Anomalías detectadas en V1-V6 que indican un evento isquémico agudo.</p>
+</div>
+</div>
+</div>
+<!-- EKG Image & Controls (Top) -->
+<section class="flex flex-col gap-stack-compact">
+<div class="flex justify-between items-end">
+<h2 class="font-h2-section-header text-on-surface">Análisis del Trazado del ECG</h2>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded-DEFAULT bg-surface text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">zoom_out</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded-DEFAULT bg-surface text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">zoom_in</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded-DEFAULT bg-surface text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">pan_tool</span>
+</button>
+</div>
+</div>
+<div class="w-full bg-white border border-outline-variant relative rounded-DEFAULT overflow-hidden group cursor-crosshair h-[250px] md:h-[400px]">
+<!-- Red Grid Overlay -->
+<div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: linear-gradient(to right, #ba1a1a 1px, transparent 1px), linear-gradient(to bottom, #ba1a1a 1px, transparent 1px); background-size: 20px 20px;"></div>
+<div class="absolute inset-0 pointer-events-none opacity-10" style="background-image: linear-gradient(to right, #ba1a1a 1px, transparent 1px), linear-gradient(to bottom, #ba1a1a 1px, transparent 1px); background-size: 4px 4px;"></div>
+<!-- Simulated EKG Trace Image -->
+<img alt="EKG Trace" class="w-full h-full object-cover mix-blend-multiply opacity-80 pl-8 pt-4" data-alt="black and white clinical ekg trace paper with erratic waveform lines indicating medical anomaly sharp focus high contrast" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYf2YM57j8MyypFxZsBBM3LT6Khazs2K6sIIqFQWGJs1JQlQ8T3Zt2YyKqKycQ1Idr6VCbPpaPHwxjENbB6JF-Sm15lhaHke4DT6lT_5e9zKhqgihI-1a5yWQxSkb6byORm27dPzO2SCV-mpr1UCqoQXcutn-4robBHWLKcOR1j4LZ_qQku2vWqNu-FFQ4Xn9EB5qaCOH_oenqWfRhP3Fwal4BaVhQt4A3-9qY5fMc1d2bu6IHX2jkunIHy8l4bUE-b5aJOHYRkQ"/>
+<!-- Highlight Box -->
+<div class="absolute border-2 border-primary bg-primary/10 top-[20%] left-[40%] w-[120px] h-[100px] pointer-events-none">
+<span class="absolute -top-6 left-0 bg-primary text-on-primary font-label-caps px-1 py-0.5 text-[8px] whitespace-nowrap">V2-V4 ST ELEVATION</span>
+</div>
+</div>
+<div class="flex justify-between items-center text-outline font-label-caps">
+<span>Velocidad: 25mm/s</span>
+<span>Extremidades: 10mm/mV</span>
+<span>Pecho: 10mm/mV</span>
+</div>
+</section>
+<!-- Structured Clinical Report (Bottom) -->
+<section class="flex flex-col gap-stack-comfortable">
+<h2 class="font-h2-section-header text-on-surface border-b border-outline-variant pb-2">Informe Estructurado</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Ritmo -->
+<div class="bg-surface border border-outline-variant p-stack-comfortable rounded-DEFAULT">
+<h3 class="font-label-caps text-on-surface-variant mb-2">RITMO</h3>
+<div class="flex items-center gap-2 mb-2">
+<span class="font-data-mono text-on-surface text-lg">Sinusal</span>
+<span class="bg-surface-variant text-on-surface font-label-caps px-1.5 py-0.5 rounded-DEFAULT">REGULAR</span>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-4">
+<div>
+<span class="font-label-caps text-outline block">F.C.</span>
+<span class="font-data-mono text-on-surface">88 bpm</span>
+</div>
+<div>
+<span class="font-label-caps text-outline block">PR INT.</span>
+<span class="font-data-mono text-on-surface">140 ms</span>
+</div>
+</div>
+</div>
+<!-- Morfología -->
+<div class="bg-surface border border-outline-variant p-stack-comfortable rounded-DEFAULT">
+<h3 class="font-label-caps text-on-surface-variant mb-2">MORFOLOGÍA</h3>
+<p class="font-body-sm text-on-surface mb-3">Eje eléctrico desviado a la izquierda (-30°). Progresión normal de la onda R en precordiales alterada.</p>
+<div class="grid grid-cols-2 gap-2">
+<div>
+<span class="font-label-caps text-outline block">QRS DUR.</span>
+<span class="font-data-mono text-on-surface">95 ms</span>
+</div>
+<div>
+<span class="font-label-caps text-outline block">QTc</span>
+<span class="font-data-mono text-on-surface">410 ms</span>
+</div>
+</div>
+</div>
+<!-- Isquemia -->
+<div class="bg-surface border border-error/50 p-stack-comfortable rounded-DEFAULT relative overflow-hidden md:col-span-2">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<h3 class="font-label-caps text-error mb-2 pl-2">ISQUEMIA / INFARTO</h3>
+<p class="font-body-md text-on-surface font-medium mb-2 pl-2">Elevación del segmento ST &gt;2mm en derivaciones V2 a V4.</p>
+<p class="font-body-sm text-on-surface-variant pl-2">Hallazgos sugerentes de infarto agudo de miocardio anteroseptal en evolución.</p>
+<div class="mt-4 pl-2 flex gap-2">
+<span class="bg-error/10 text-error border border-error/20 font-label-caps px-2 py-1 rounded-DEFAULT">V2</span>
+<span class="bg-error/10 text-error border border-error/20 font-label-caps px-2 py-1 rounded-DEFAULT">V3</span>
+<span class="bg-error/10 text-error border border-error/20 font-label-caps px-2 py-1 rounded-DEFAULT">V4</span>
+</div>
+</div>
+<!-- Recomendación -->
+<div class="bg-primary-fixed border border-primary/20 p-stack-comfortable rounded-DEFAULT md:col-span-2">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary mt-0.5">medical_services</span>
+<div>
+<h3 class="font-label-caps text-primary-container mb-1">RECOMENDACIÓN CLÍNICA</h3>
+<p class="font-body-md text-on-primary-container font-medium">Activación de código infarto sugerida. Evaluar reperfusión coronaria percutánea inmediata.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-14 bg-white dark:bg-slate-950 border-t border-gray-200 dark:border-gray-800 flat no shadows font-inter text-[10px] font-bold uppercase tracking-widest transition-transform duration-75">
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 pt-1 hover:text-blue-600 dark:hover:text-blue-300 w-full h-full" href="#"><span class="material-symbols-outlined mb-1">monitor_heart</span> Panel</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 border-t-2 border-blue-700 pt-1 hover:text-blue-600 dark:hover:text-blue-300 w-full h-full bg-blue-50/50" href="#"><span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">legend_toggle</span> Flujo de ECG</a>
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 pt-1 hover:text-blue-600 dark:hover:text-blue-300 w-full h-full" href="#"><span class="material-symbols-outlined mb-1">database</span> Base de Datos</a>
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 pt-1 hover:text-blue-600 dark:hover:text-blue-300 w-full h-full" href="#"><span class="material-symbols-outlined mb-1">account_circle</span> Perfil</a>
+</nav>
+</body></html>

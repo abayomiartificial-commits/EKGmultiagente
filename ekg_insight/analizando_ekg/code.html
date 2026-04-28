@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Procesando EKG - CardioAnalyze Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#4e6874",
+                        "primary-container": "#0b5394",
+                        "on-background": "#191c1d",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "secondary-container": "#cbe7f5",
+                        "inverse-surface": "#2e3132",
+                        "surface-tint": "#2260a1",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#a4c9ff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#311300",
+                        "secondary-fixed-dim": "#afcbd8",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-secondary-fixed-variant": "#304a55",
+                        "on-primary-fixed": "#001c39",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "tertiary-fixed-dim": "#ffb787",
+                        "surface": "#f8f9fa",
+                        "tertiary-container": "#833f00",
+                        "secondary": "#48626e",
+                        "tertiary-fixed": "#ffdcc7",
+                        "on-primary-container": "#a2c8ff",
+                        "inverse-primary": "#a4c9ff",
+                        "surface-bright": "#f8f9fa",
+                        "tertiary": "#602d00",
+                        "on-primary-fixed-variant": "#004883",
+                        "surface-container-low": "#f3f4f5",
+                        "on-surface-variant": "#424750",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#191c1d",
+                        "surface-container-highest": "#e1e3e4",
+                        "secondary-fixed": "#cbe7f5",
+                        "on-primary": "#ffffff",
+                        "primary": "#003c6f",
+                        "background": "#f8f9fa",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c2c6d2",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-fixed": "#d4e3ff",
+                        "error": "#ba1a1a",
+                        "outline": "#727781",
+                        "on-secondary-fixed": "#021f29",
+                        "surface-container": "#edeeef",
+                        "on-tertiary-container": "#ffb584"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "section-gap": "32px",
+                        "stack-comfortable": "16px",
+                        "gutter": "16px",
+                        "stack-compact": "8px",
+                        "container-margin": "24px"
+                    },
+                    "fontFamily": {
+                        "h1-report-title": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h2-section-header": ["Inter"],
+                        "data-mono": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1-report-title": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "h2-section-header": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col items-center justify-center p-container-margin antialiased">
+<!-- 
+      Note: Navigation shell (TopAppBar, SideNav, BottomNav) is explicitly suppressed here 
+      because this is a transactional "Processing Status" screen. The focus must be entirely 
+      on the clinical data processing to maintain a high-trust, uninterrupted flow.
+    -->
+<div class="w-full max-w-lg flex flex-col items-center">
+<!-- Brand Context (Minimal) -->
+<div class="mb-section-gap text-center">
+<span class="material-symbols-outlined fill text-primary text-4xl mb-stack-compact block">ecg_heart</span>
+<h2 class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">CardioAnalyze Pro</h2>
+</div>
+<!-- Processing Card -->
+<div class="w-full bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm p-8 flex flex-col items-center text-center">
+<!-- Overall Status Header -->
+<h1 class="font-h1-report-title text-h1-report-title text-on-surface mb-stack-compact">Procesamiento de Diagnóstico</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mb-section-gap">Ejecutando protocolo de análisis clínico multi-agente. Por favor espere.</p>
+<!-- Main Progress Indicator (Static representation as per rules) -->
+<div class="w-full mb-section-gap">
+<div class="flex justify-between items-end mb-unit">
+<span class="font-data-mono text-data-mono text-primary">Fase 2 de 6</span>
+<span class="font-data-mono text-data-mono text-secondary">Est. 45s</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden flex">
+<!-- Progress Bar (approx 16% for 1/6 done, moving to 2) -->
+<div class="h-full bg-primary rounded-full" style="width: 25%;"></div>
+</div>
+</div>
+<!-- Agent List -->
+<div class="w-full flex flex-col gap-unit text-left border-t border-surface-variant pt-stack-comfortable">
+<!-- Agent 1: Done -->
+<div class="flex items-center gap-stack-comfortable p-stack-compact rounded-lg bg-surface-bright">
+<span class="material-symbols-outlined fill text-surface-tint">check_circle</span>
+<span class="font-data-mono text-data-mono text-on-surface flex-1">Validación de imagen</span>
+<span class="font-label-caps text-label-caps text-surface-tint uppercase">Completado</span>
+</div>
+<!-- Agent 2: Active -->
+<div class="flex items-center gap-stack-comfortable p-stack-compact rounded-lg border border-primary-fixed bg-surface-container-lowest shadow-sm">
+<span class="material-symbols-outlined text-primary">data_usage</span>
+<span class="font-data-mono text-data-mono text-primary font-bold flex-1">Análisis de ritmo</span>
+<span class="font-label-caps text-label-caps text-primary uppercase">Activo</span>
+</div>
+<!-- Agent 3: Pending -->
+<div class="flex items-center gap-stack-comfortable p-stack-compact rounded-lg">
+<span class="material-symbols-outlined text-outline-variant">hourglass_empty</span>
+<span class="font-data-mono text-data-mono text-outline flex-1">Morfología</span>
+<span class="font-label-caps text-label-caps text-outline-variant uppercase">Pendiente</span>
+</div>
+<!-- Agent 4: Pending -->
+<div class="flex items-center gap-stack-comfortable p-stack-compact rounded-lg">
+<span class="material-symbols-outlined text-outline-variant">hourglass_empty</span>
+<span class="font-data-mono text-data-mono text-outline flex-1">Isquemia</span>
+<span class="font-label-caps text-label-caps text-outline-variant uppercase">Pendiente</span>
+</div>
+<!-- Agent 5: Pending -->
+<div class="flex items-center gap-stack-comfortable p-stack-compact rounded-lg">
+<span class="material-symbols-outlined text-outline-variant">hourglass_empty</span>
+<span class="font-data-mono text-data-mono text-outline flex-1">Intervalos</span>
+<span class="font-label-caps text-label-caps text-outline-variant uppercase">Pendiente</span>
+</div>
+<!-- Agent 6: Pending -->
+<div class="flex items-center gap-stack-comfortable p-stack-compact rounded-lg">
+<span class="material-symbols-outlined text-outline-variant">hourglass_empty</span>
+<span class="font-data-mono text-data-mono text-outline flex-1">Síntesis clínica</span>
+<span class="font-label-caps text-label-caps text-outline-variant uppercase">Pendiente</span>
+</div>
+</div>
+</div>
+<!-- Security Badge -->
+<div class="mt-stack-comfortable flex items-center gap-unit text-on-surface-variant opacity-70">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span class="font-body-sm text-body-sm">Procesamiento cifrado de extremo a extremo</span>
+</div>
+</div>
+</body></html>

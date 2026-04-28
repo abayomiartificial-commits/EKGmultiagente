@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EKG Multi‑Agente – Cargar EKG</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <main class="container">
+    <h1 class="title">Análisis de EKG – Carga de Imagen</h1>
+    <section class="upload-section">
+      <div id="drop-area" class="drop-area">
+        <p>Arrastra la imagen del EKG aquí o haz clic para seleccionar</p>
+        <input type="file" id="fileElem" accept="image/png, image/jpeg" hidden />
+        <button class="btn btn-primary" id="fileSelectBtn">Seleccionar archivo</button>
+      </div>
+      <div id="progress" class="progress hidden">
+        <div class="progress-bar" role="progressbar"></div>
+      </div>
+    </section>
+    <section id="status" class="status hidden"></section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

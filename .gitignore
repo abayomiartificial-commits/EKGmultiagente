@@ -1,0 +1,42 @@
+# ---- Node / npm
+node_modules/
+npm-debug.log
+package-lock.json
+# si usas Yarn
+yarn.lock
+
+# ---- Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.log
+
+# ---- Entorno local / IDE
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ---- Archivos de configuración que contienen credenciales
+.env
+.env.local
+.env.*      # cualquier variante
+
+# ---- Firebase & Cloud Run
+firebase-debug.log
+firebase.json.backup
+
+# ---- Archivos de despliegue temporales
+*.tgz
+*.zip
+
+# ---- Otros artefactos que no queremos versionar
+*.webm
+*.webp

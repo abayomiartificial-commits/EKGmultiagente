@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CardioAnalyze Pro - Subir EKG</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#4e6874",
+                    "primary-container": "#0b5394",
+                    "on-background": "#191c1d",
+                    "surface-variant": "#e1e3e4",
+                    "surface-dim": "#d9dadb",
+                    "secondary-container": "#cbe7f5",
+                    "inverse-surface": "#2e3132",
+                    "surface-tint": "#2260a1",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed-dim": "#a4c9ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#311300",
+                    "secondary-fixed-dim": "#afcbd8",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-secondary-fixed-variant": "#304a55",
+                    "on-primary-fixed": "#001c39",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "tertiary-fixed-dim": "#ffb787",
+                    "surface": "#f8f9fa",
+                    "tertiary-container": "#833f00",
+                    "secondary": "#48626e",
+                    "tertiary-fixed": "#ffdcc7",
+                    "on-primary-container": "#a2c8ff",
+                    "inverse-primary": "#a4c9ff",
+                    "surface-bright": "#f8f9fa",
+                    "tertiary": "#602d00",
+                    "on-primary-fixed-variant": "#004883",
+                    "surface-container-low": "#f3f4f5",
+                    "on-surface-variant": "#424750",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#191c1d",
+                    "surface-container-highest": "#e1e3e4",
+                    "secondary-fixed": "#cbe7f5",
+                    "on-primary": "#ffffff",
+                    "primary": "#003c6f",
+                    "background": "#f8f9fa",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c2c6d2",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-fixed": "#d4e3ff",
+                    "error": "#ba1a1a",
+                    "outline": "#727781",
+                    "on-secondary-fixed": "#021f29",
+                    "surface-container": "#edeeef",
+                    "on-tertiary-container": "#ffb584"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "section-gap": "32px",
+                    "stack-comfortable": "16px",
+                    "gutter": "16px",
+                    "stack-compact": "8px",
+                    "container-margin": "24px"
+            },
+            "fontFamily": {
+                    "h1-report-title": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "h2-section-header": ["Inter"],
+                    "data-mono": ["Inter"]
+            },
+            "fontSize": {
+                    "h1-report-title": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "h2-section-header": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-16 bg-white dark:bg-slate-950 docked full-width top-0 border-b border-gray-200 dark:border-gray-800 flat no shadows z-50">
+<div class="flex items-center gap-4">
+<button class="text-blue-700 dark:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-900 transition-colors duration-150 ease-in-out p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-inter tracking-tight text-sm font-semibold uppercase text-blue-900 dark:text-blue-200 text-xl font-black tracking-tighter">CardioAnalyze Pro</h1>
+</div>
+<button class="text-blue-700 dark:text-blue-400 font-inter tracking-tight text-sm font-semibold uppercase hover:bg-gray-50 dark:hover:bg-slate-900 transition-colors duration-150 ease-in-out px-4 py-2 rounded-lg">CONFIRMAR DIAGNÓSTICO</button>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- NavigationDrawer (Hidden on Mobile, Visible on Desktop) -->
+<nav class="hidden md:flex flex-col h-screen w-80 border-r border-gray-200 dark:border-gray-800 bg-[#F5F5F5] dark:bg-slate-900 flat no shadows fixed left-0 top-0 z-40 pt-16">
+<div class="p-6 border-b border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant flex-shrink-0">
+<img alt="Clinician Portrait" class="w-full h-full object-cover" data-alt="Professional headshot of a mature male doctor in a white coat with a stethoscope, neutral clinical background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgCkhKOgU_KMuMqUbjdsyaa0vs9xJjCEiISfDXPTJd3CIHsIHOBBS9jyUVjPMstSbEkqn-sA_QOKeq37_QxSonDrwYvQS6wXdGQQdTRa5lZ0lLaZjQY2ZKOTSST-7sihwW7SFMRqTihenGBi47OZIVtKW-1MN3RTr6pxK8KW-Us8VB190bGKyU5V76Dcr1ublcTKwHpCj9-1upwZUnrCKmXFg85YLYmZoZWDqL6NlmbwRLEwWTA07ewpnHRymMgNFarGsfLdkjUw"/>
+</div>
+<div>
+<h2 class="text-lg font-bold text-blue-900 dark:text-blue-100 font-inter text-sm antialiased">Dr. Aris Thorne</h2>
+<p class="text-gray-600 dark:text-gray-400 font-body-sm">Cardiology Dept.</p>
+<p class="text-gray-500 dark:text-gray-500 font-label-caps mt-1">Hospital ID: 8829</p>
+</div>
+</div>
+</div>
+<div class="flex-1 py-4 overflow-y-auto">
+<ul class="space-y-1 px-3">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-300 border-l-4 border-blue-700 font-inter text-sm antialiased active:opacity-80 transition-all hover:bg-gray-200 dark:hover:bg-slate-700" href="#"><span class="material-symbols-outlined">ulna_radius</span> Cola de Pacientes</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 font-inter text-sm antialiased active:opacity-80 transition-all hover:bg-gray-200 dark:hover:bg-slate-700 border-l-4 border-transparent" href="#"><span class="material-symbols-outlined">history_edu</span> Historial de Diagnósticos</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 font-inter text-sm antialiased active:opacity-80 transition-all hover:bg-gray-200 dark:hover:bg-slate-700 border-l-4 border-transparent" href="#"><span class="material-symbols-outlined">emergency_home</span> Alertas Críticas</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 font-inter text-sm antialiased active:opacity-80 transition-all hover:bg-gray-200 dark:hover:bg-slate-700 border-l-4 border-transparent" href="#"><span class="material-symbols-outlined">settings</span> Ajustes</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-surface pt-6 px-4 md:px-8 pb-24 md:ml-80">
+<div class="max-w-4xl mx-auto">
+<!-- Page Header -->
+<div class="mb-section-gap">
+<h2 class="font-h1-report-title text-h1-report-title text-on-surface mb-unit">Subir Imagen de EKG</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Proporcione una imagen clara y de alta resolución del EKG para su análisis.</p>
+</div>
+<!-- Upload Canvas -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center min-h-[400px] border-dashed relative">
+<!-- Decorative Background Element -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #000 1px, transparent 0); background-size: 20px 20px;"></div>
+<div class="z-10 flex flex-col items-center text-center max-w-md">
+<div class="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center mb-6 border border-outline-variant">
+<span class="material-symbols-outlined text-4xl text-primary">cloud_upload</span>
+</div>
+<h3 class="font-h2-section-header text-h2-section-header text-on-surface mb-2">Arrastra y suelta el EKG aquí</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">o haz clic abajo para buscar tus archivos</p>
+<div class="flex gap-4 w-full flex-col sm:flex-row">
+<button class="flex-1 bg-surface-container-lowest border border-outline text-on-surface font-body-md text-body-md py-2 px-4 rounded-DEFAULT hover:bg-surface-container-low transition-colors duration-150 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">image</span>
+                                Subir imagen EKG
+                            </button>
+<button class="flex-1 bg-primary text-on-primary font-body-md text-body-md py-2 px-4 rounded-DEFAULT hover:bg-surface-tint transition-colors duration-150 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined text-sm">analytics</span>
+                                Analizar EKG
+                            </button>
+</div>
+</div>
+</div>
+<!-- Guidance & Status Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter mt-section-gap">
+<!-- Requirements Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-stack-comfortable">
+<div class="flex items-center gap-2 mb-stack-compact">
+<span class="material-symbols-outlined text-secondary text-sm">info</span>
+<h4 class="font-h2-section-header text-body-md font-semibold text-on-surface">Requisitos de la Imagen</h4>
+</div>
+<ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-outline mt-0.5">check_circle</span> Formatos: solo JPG o PNG</li>
+<li class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-outline mt-0.5">check_circle</span> 1 imagen por sesión de análisis</li>
+<li class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-outline mt-0.5">check_circle</span> Se recomienda alta resolución (300dpi+)</li>
+<li class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-outline mt-0.5">check_circle</span> Asegúrese de que las líneas de la cuadrícula sean claramente visibles</li>
+</ul>
+</div>
+<!-- Status Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-stack-comfortable flex flex-col justify-center items-center text-center">
+<div class="w-12 h-12 bg-surface-container-low rounded-full flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-outline">hourglass_empty</span>
+</div>
+<p class="font-label-caps text-label-caps text-outline mb-1 uppercase">ESTADO ACTUAL</p>
+<p class="font-data-mono text-data-mono text-on-surface-variant">Esperando imagen</p>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Visible on Mobile, Hidden on Desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-14 bg-white dark:bg-slate-950 border-t border-gray-200 dark:border-gray-800 flat no shadows">
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 border-t-2 border-blue-700 pt-1 font-inter text-[10px] font-bold uppercase tracking-widest transition-transform duration-75 w-1/4" href="#">
+<span class="material-symbols-outlined mb-0.5">monitor_heart</span>
+<span>Panel</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 pt-1 hover:text-blue-600 dark:hover:text-blue-300 font-inter text-[10px] font-bold uppercase tracking-widest transition-transform duration-75 border-t-2 border-transparent w-1/4" href="#">
+<span class="material-symbols-outlined mb-0.5">legend_toggle</span>
+<span>Canal EKG</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 pt-1 hover:text-blue-600 dark:hover:text-blue-300 font-inter text-[10px] font-bold uppercase tracking-widest transition-transform duration-75 border-t-2 border-transparent w-1/4" href="#">
+<span class="material-symbols-outlined mb-0.5">database</span>
+<span>Base de Datos</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 pt-1 hover:text-blue-600 dark:hover:text-blue-300 font-inter text-[10px] font-bold uppercase tracking-widest transition-transform duration-75 border-t-2 border-transparent w-1/4" href="#">
+<span class="material-symbols-outlined mb-0.5">account_circle</span>
+<span>Perfil</span>
+</a>
+</nav>
+</body></html>

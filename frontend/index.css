@@ -1,0 +1,114 @@
+/* Design System Variables (from DESIGN.md) */
+:root {
+  /* Colors */
+  --color-primary: #003c6f; /* from design system primary */
+  --color-primary-container: #0b5394;
+  --color-surface: #f8f9fa;
+  --color-surface-variant: #e1e3e4;
+  --color-background: #f8f9fa;
+  --color-on-primary: #ffffff;
+  --color-on-surface: #191c1d;
+  --color-success: #28a745; /* custom for normal */
+  --color-warning: #ffc107; /* caution */
+  --color-danger: #dc3545; /* critical */
+
+  /* Typography */
+  --font-family: 'Inter', sans-serif;
+  --h1-size: 24px;
+  --h1-weight: 600;
+  --h2-size: 18px;
+  --h2-weight: 600;
+  --body-md-size: 14px;
+  --body-md-weight: 400;
+  --label-caps-size: 11px;
+  --label-caps-weight: 700;
+
+  /* Spacing */
+  --spacing-unit: 4px;
+  --container-margin: 24px;
+  --gutter: 16px;
+  --section-gap: 32px;
+
+  /* Rounded */
+  --rounded-sm: 0.125rem;
+  --rounded-default: 0.25rem;
+  --rounded-md: 0.375rem;
+  --rounded-lg: 0.5rem;
+}
+
+/* Global resets */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 800px;
+  margin: var(--container-margin) auto;
+  padding: var(--gutter);
+}
+.title {
+  font-size: var(--h1-size);
+  font-weight: var(--h1-weight);
+  margin-bottom: var(--section-gap);
+  text-align: center;
+}
+
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gutter);
+}
+.drop-area {
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--rounded-default);
+  padding: calc(var(--spacing-unit) * 8);
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--color-surface);
+  transition: background-color 0.2s;
+}
+.drop-area:hover, .drop-area.dragover {
+  background-color: var(--color-surface-variant);
+}
+
+.btn {
+  font-size: var(--body-md-size);
+  font-weight: var(--body-md-weight);
+  padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
+  border: none;
+  border-radius: var(--rounded-sm);
+  cursor: pointer;
+}
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.btn-primary:hover {
+  background-color: var(--color-primary-container);
+}
+
+.progress {
+  width: 100%;
+  max-width: 500px;
+  height: 8px;
+  background-color: var(--color-surface-variant);
+  border-radius: var(--rounded-sm);
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: var(--color-primary);
+  transition: width 0.3s;
+}
+
+.status {
+  margin-top: var(--gutter);
+  font-size: var(--body-md-size);
+}

@@ -25,10 +25,10 @@ jobs:
           cd frontend
           npm install
 
-      - name: Build frontend (si existe script de build)
+      - name: Build frontend
         run: |
           cd frontend
-          npm run build 2>/dev/null || echo "No build script found, deploying static files directly"
+          npm run build 2>/dev/null || echo "No build script, deploying static files"
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
@@ -43,34 +43,32 @@ jobs:
 
   # ──────────────────────────────────────────────────
   # JOB 2: Deploy Backend → Google Cloud Run
-  # GCP_SA_KEY: JSON del service account en Base64
-  #   Generar con: base64 -w0 service-account.json
+  # GCP_SA_KEY: Compact JSON string (NOT base64)
   # ──────────────────────────────────────────────────
   deploy-backend:
     name: Deploy FastAPI Backend to Cloud Run
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Authenticate to Google Cloud
-        env:
-          GCP_SA_KEY_B64: ${{ secrets.GCP_SA_KEY }}
-          GCLOUD_PROJECT: ${{ secrets.GCLOUD_PROJECT }}
-        run: |
-          echo "$GCP_SA_KEY_B64" | base64 --decode > /tmp/gcp_key.json
-          gcloud auth activate-service-account \
-            --key-file=/tmp/gcp_key.json \
-            --project="$GCLOUD_PROJECT"
-          gcloud config set project "$GCLOUD_PROJECT"
-          gcloud auth list
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT }}
 
       - name: Configure Docker for Artifact Registry
-        env:
-          GCLOUD_REGION: ${{ secrets.GCLOUD_REGION }}
         run: |
-          gcloud auth configure-docker "${GCLOUD_REGION}-docker.pkg.dev" --quiet
+          gcloud auth configure-docker ${{ secrets.GCLOUD_REGION }}-docker.pkg.dev --quiet
 
       - name: Build and push Docker image
         env:
@@ -97,7 +95,3 @@ jobs:
             --cpu 1 \
             --timeout 120 \
             --set-env-vars "OPENAI_API_BASE=https://openrouter.ai/api/v1,MODEL_NAME=${{ secrets.MODEL_NAME }},OPENAI_API_KEY=${{ secrets.MODEL_API_KEY }},ALLOWED_ORIGINS=https://${{ secrets.FIREBASE_PROJECT }}.web.app,https://${{ secrets.FIREBASE_PROJECT }}.firebaseapp.com"
-
-      - name: Cleanup credentials
-        if: always()
-        run: rm -f /tmp/gcp_key.json

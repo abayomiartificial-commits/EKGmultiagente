@@ -3,24 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EKG Multi‑Agente – Cargar EKG</title>
+  <meta name="description" content="Sistema multiagente de análisis de EKG de 12 derivaciones asistido por inteligencia artificial. Marco de segunda opinión para el médico tratante." />
+  <title>EKG Multi-Agente — Análisis Clínico con IA</title>
   <link rel="stylesheet" href="index.css" />
 </head>
-<body>
-  <main class="container">
-    <h1 class="title">Análisis de EKG – Carga de Imagen</h1>
-    <section class="upload-section">
-      <div id="drop-area" class="drop-area">
-        <p>Arrastra la imagen del EKG aquí o haz clic para seleccionar</p>
-        <input type="file" id="fileElem" accept="image/png, image/jpeg" hidden />
-        <button class="btn btn-primary" id="fileSelectBtn">Seleccionar archivo</button>
+<body class="page-upload">
+
+  <header class="site-header">
+    <div class="logo-icon">🫀</div>
+    <span class="logo-text">EKG <span>Multi-Agente</span></span>
+    <span class="header-tag">Beta · Uso clínico interno</span>
+  </header>
+
+  <main class="hero">
+    <h1 class="hero-title">
+      Análisis de EKG<br>
+      asistido por <span class="hl">5 agentes de IA</span>
+    </h1>
+    <p class="hero-subtitle">
+      Carga la imagen del EKG y nuestro sistema analizará en paralelo ritmo, morfología, isquemia e intervalos para generar un concepto clínico estructurado.
+    </p>
+
+    <!-- Upload zone -->
+    <div id="uploadCard" class="upload-card">
+      <span class="upload-icon">📋</span>
+      <p class="upload-title">Arrastra el EKG aquí</p>
+      <p class="upload-subtitle">Formatos aceptados: JPG · PNG &nbsp;|&nbsp; Máx. 10 MB</p>
+      <button class="btn btn-primary" id="fileSelectBtn" type="button">
+        ⬆ Seleccionar archivo
+      </button>
+      <input type="file" id="fileElem" accept="image/jpeg, image/png" hidden />
+    </div>
+
+    <!-- Progress -->
+    <div id="progressWrap" class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-bar" id="progressBar"></div>
       </div>
-      <div id="progress" class="progress hidden">
-        <div class="progress-bar" role="progressbar"></div>
-      </div>
-    </section>
-    <section id="status" class="status hidden"></section>
+      <p class="progress-label" id="progressLabel">Preparando análisis…</p>
+    </div>
+
+    <!-- Agent status chips -->
+    <div class="agents-grid" id="agentsGrid">
+      <div class="agent-chip" id="chip-ritmo">       <span class="dot"></span> Ritmo       </div>
+      <div class="agent-chip" id="chip-morfologia">  <span class="dot"></span> Morfología  </div>
+      <div class="agent-chip" id="chip-isquemia">    <span class="dot"></span> Isquemia    </div>
+      <div class="agent-chip" id="chip-intervalos">  <span class="dot"></span> Intervalos  </div>
+      <div class="agent-chip" id="chip-sintesis">    <span class="dot"></span> Síntesis    </div>
+    </div>
+
+    <!-- Status message -->
+    <div id="statusMsg" class="status-msg"></div>
+
   </main>
+
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,78 +1,166 @@
+/* =============================================
+   EKG Multi-Agente — Upload Logic (app.js)
+   Connects frontend to FastAPI backend
+   ============================================= */
+
+// ── API URL dinámica: localhost en dev, Cloud Run en producción ───────────
+const CLOUD_RUN_URL = 'https://ekg-backend-XXXXXXXXXX-uc.a.run.app'; // ← actualizar tras primer deploy
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:8080/analyze'
+  : `${CLOUD_RUN_URL}/analyze`;
+
+
 document.addEventListener('DOMContentLoaded', () => {
-  const dropArea = document.getElementById('drop-area');
-  const fileInput = document.getElementById('fileElem');
-  const fileSelectBtn = document.getElementById('fileSelectBtn');
-  const progressBar = document.querySelector('.progress-bar');
-  const progressContainer = document.getElementById('progress');
-  const statusEl = document.getElementById('status');
+  const uploadCard   = document.getElementById('uploadCard');
+  const fileInput    = document.getElementById('fileElem');
+  const fileBtn      = document.getElementById('fileSelectBtn');
+  const progressWrap = document.getElementById('progressWrap');
+  const progressBar  = document.getElementById('progressBar');
+  const progressLbl  = document.getElementById('progressLabel');
+  const statusMsg    = document.getElementById('statusMsg');
 
-  // Click to open file selector
-  fileSelectBtn.addEventListener('click', () => fileInput.click());
+  // ── Open file dialog ──────────────────────────────────
+  fileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fileInput.click();
+  });
+  uploadCard.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
-  // Handle file selection via dialog
-  fileInput.addEventListener('change', handleFiles);
-
-  // Drag & drop handlers
+  // ── Drag & drop ───────────────────────────────────────
   ['dragenter', 'dragover'].forEach(ev => {
-    dropArea.addEventListener(ev, e => {
+    uploadCard.addEventListener(ev, (e) => {
       e.preventDefault();
       e.stopPropagation();
-      dropArea.classList.add('dragover');
+      uploadCard.classList.add('dragover');
     });
   });
   ['dragleave', 'drop'].forEach(ev => {
-    dropArea.addEventListener(ev, e => {
+    uploadCard.addEventListener(ev, (e) => {
       e.preventDefault();
       e.stopPropagation();
-      dropArea.classList.remove('dragover');
+      uploadCard.classList.remove('dragover');
     });
   });
-  dropArea.addEventListener('drop', e => {
-    const dt = e.dataTransfer;
-    const files = dt.files;
-    handleFiles({ target: { files } });
+  uploadCard.addEventListener('drop', (e) => {
+    handleFiles(e.dataTransfer.files);
   });
 
-  function handleFiles(event) {
-    const files = event.target.files;
+  // ── Main upload handler ───────────────────────────────
+  async function handleFiles(files) {
     if (!files || files.length === 0) return;
     const file = files[0];
-    // Basic validation
-    const validTypes = ['image/jpeg', 'image/png'];
-    if (!validTypes.includes(file.type)) {
-      showStatus('Tipo de archivo no soportado. Usa JPG o PNG.', 'danger');
-      return;
+
+    // Client-side validation
+    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+      return showStatus('Tipo de archivo no soportado. Usa JPG o PNG.', 'error');
     }
-    if (file.size > 10 * 1024 * 1024) { // 10 MB
-      showStatus('El archivo supera los 10 MB permitidos.', 'danger');
-      return;
+    if (file.size > 10 * 1024 * 1024) {
+      return showStatus('El archivo supera los 10 MB permitidos.', 'error');
     }
-    // Show progress placeholder (simulated)
-    progressContainer.classList.remove('hidden');
-    progressBar.style.width = '0%';
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 10;
-      progressBar.style.width = `${progress}%`;
-      if (progress >= 100) {
-        clearInterval(interval);
-        // Here we would call the backend API; for now just show success
-        showStatus('Imagen cargada correctamente. Análisis pendiente...', 'success');
-        // Redirect to result page with placeholder query param (to be replaced later)
-        const reader = new FileReader();
-        reader.onload = () => {
-          // Save the base64 data to sessionStorage for the result page demo
-          sessionStorage.setItem('ekgImage', reader.result);
-          window.location.href = 'result.html';
-        };
-        reader.readAsDataURL(file);
+
+    // Save image preview for result page
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => sessionStorage.setItem('ekgImage', reader.result);
+
+    // Show progress UI
+    setProgress(true);
+    animateChips('active', ['ritmo', 'morfologia', 'isquemia', 'intervalos']);
+    setProgressBar(15, 'Enviando imagen al servidor…');
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Simulate visual progress while waiting for backend
+      let fakeProgress = 15;
+      const fakeInterval = setInterval(() => {
+        if (fakeProgress < 70) {
+          fakeProgress += 5;
+          setProgressBar(fakeProgress, getProgressLabel(fakeProgress));
+        }
+      }, 1200);
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        body: formData,
+      });
+
+      clearInterval(fakeInterval);
+
+      if (!response.ok) {
+        let detail = `Error HTTP ${response.status}`;
+        try { const err = await response.json(); detail = err.detail || detail; } catch {}
+        throw new Error(detail);
       }
-    }, 200);
+
+      const result = await response.json();
+
+      // Mark all agents done, síntesis active → then done
+      animateChips('done', ['ritmo', 'morfologia', 'isquemia', 'intervalos']);
+      animateChips('active', ['sintesis']);
+      setProgressBar(90, 'Generando síntesis clínica…');
+
+      await delay(800);
+
+      animateChips('done', ['sintesis']);
+      setProgressBar(100, 'Análisis completo. Redirigiendo…');
+
+      // Store result and navigate
+      sessionStorage.setItem('ekgResult', JSON.stringify(result));
+      await delay(700);
+      window.location.href = 'result.html';
+
+    } catch (err) {
+      setProgress(false);
+      resetChips();
+      showStatus(`Error en el análisis: ${err.message}`, 'error');
+      console.error('[EKG] Error:', err);
+    }
   }
 
-  function showStatus(message, type) {
-    statusEl.textContent = message;
-    statusEl.className = `status ${type}`;
-    statusEl.classList.remove('hidden');
+  // ── Helpers ───────────────────────────────────────────
+  function setProgress(visible) {
+    progressWrap.classList.toggle('visible', visible);
+    uploadCard.style.pointerEvents = visible ? 'none' : 'auto';
+    uploadCard.style.opacity = visible ? '0.5' : '1';
+  }
+
+  function setProgressBar(pct, label) {
+    progressBar.style.width = `${pct}%`;
+    if (label) progressLbl.textContent = label;
+  }
+
+  function getProgressLabel(pct) {
+    if (pct < 30) return 'Analizando ritmo y morfología…';
+    if (pct < 50) return 'Evaluando isquemia e intervalos…';
+    if (pct < 70) return 'Procesando hallazgos clínicos…';
+    return 'Casi listo…';
+  }
+
+  function animateChips(state, agentIds) {
+    agentIds.forEach(id => {
+      const chip = document.getElementById(`chip-${id}`);
+      if (!chip) return;
+      chip.classList.remove('active', 'done');
+      if (state) chip.classList.add(state);
+    });
+  }
+
+  function resetChips() {
+    ['ritmo', 'morfologia', 'isquemia', 'intervalos', 'sintesis'].forEach(id => {
+      const chip = document.getElementById(`chip-${id}`);
+      if (chip) chip.classList.remove('active', 'done');
+    });
+  }
+
+  function showStatus(msg, type) {
+    statusMsg.textContent = msg;
+    statusMsg.className = `status-msg visible ${type}`;
+  }
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 });

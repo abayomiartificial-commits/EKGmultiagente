@@ -40,3 +40,9 @@ firebase.json.backup
 # ---- Otros artefactos que no queremos versionar
 *.webm
 *.webp
+
+# ---- Service account keys (NUNCA commitear)
+*-service-account*.json
+ekgmultiagente-*.json
+*credentials*.json
+*serviceaccount*.json

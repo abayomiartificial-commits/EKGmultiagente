@@ -3,37 +3,262 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EKG Multi‑Agente – Resultado</title>
+  <meta name="description" content="Reporte clínico estructurado generado por el sistema multiagente de análisis de EKG." />
+  <title>EKG Multi-Agente — Reporte Clínico</title>
   <link rel="stylesheet" href="index.css" />
 </head>
-<body>
-  <main class="container">
-    <header class="result-header">
-      <h1 class="title">Reporte de Análisis de EKG</h1>
-      <div id="urgencyBadge" class="badge badge-normal">NORMAL</div>
-    </header>
-    <section class="result-body">
-      <div class="ekg-image">
-        <img id="ekgImg" alt="EKG cargado" />
-      </div>
-      <div class="report-section">
-        <h2 class="section-header">Resumen Clínico</h2>
-        <div id="reportContent">
-          <p>El reporte será generado aquí una vez el backend esté disponible.</p>
+<body class="page-result">
+
+  <header class="site-header">
+    <div class="logo-icon">🫀</div>
+    <span class="logo-text">EKG <span>Multi-Agente</span></span>
+    <span class="header-tag">Reporte Clínico</span>
+  </header>
+
+  <div class="result-layout">
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <p class="sidebar-title">Imagen analizada</p>
+      <img id="ekgImg" class="ekg-preview hidden" alt="EKG cargado" />
+      <div id="ekgPlaceholder" class="ekg-preview-placeholder">Sin imagen</div>
+
+      <div class="divider"></div>
+
+      <div id="urgencyBadge" class="urgency-badge normal">
+        <span class="u-icon">🟢</span>
+        <div class="u-text">
+          <span class="u-label">Urgencia global</span>
+          <span class="u-value" id="urgencyValue">—</span>
         </div>
-        <button class="btn btn-primary" id="newAnalysisBtn">Nuevo Análisis</button>
       </div>
-    </section>
-  </main>
+
+      <div class="meta-item">
+        <span class="meta-label">Diagnóstico principal</span>
+        <span class="meta-value" id="metaDiagnostico">—</span>
+      </div>
+
+      <div class="meta-item">
+        <span class="meta-label">Recomendación</span>
+        <span class="meta-value" id="metaRecomendacion">—</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="actions-row">
+        <button class="btn btn-primary" id="newAnalysisBtn">↩ Nuevo análisis</button>
+      </div>
+
+      <p class="disclaimer">
+        ⚠️ Este reporte es una guía de segunda opinión generada por IA.<br>
+        El diagnóstico final es <strong>responsabilidad exclusiva del médico tratante</strong>.
+      </p>
+    </aside>
+
+    <!-- ── Report area ── -->
+    <main class="report-area" id="reportArea">
+
+      <!-- Synthesis card (always visible, top) -->
+      <div class="report-section-card synthesis-card">
+        <div class="card-header open" data-target="bodySintesis">
+          <span class="card-icon">🧠</span>
+          <span class="card-title">Concepto Clínico Integrado</span>
+          <span class="card-chevron">▼</span>
+        </div>
+        <div class="card-body open" id="bodySintesis">
+          <p class="synthesis-text" id="conceptoText">Cargando concepto clínico…</p>
+        </div>
+      </div>
+
+      <!-- Ritmo -->
+      <div class="report-section-card">
+        <div class="card-header" data-target="bodyRitmo">
+          <span class="card-icon">💓</span>
+          <span class="card-title">Ritmo Cardíaco</span>
+          <span class="card-badge normal" id="badgeRitmo">—</span>
+          <span class="card-chevron">▼</span>
+        </div>
+        <div class="card-body" id="bodyRitmo"></div>
+      </div>
+
+      <!-- Morfología -->
+      <div class="report-section-card">
+        <div class="card-header" data-target="bodyMorfologia">
+          <span class="card-icon">📐</span>
+          <span class="card-title">Morfología y Eje Eléctrico</span>
+          <span class="card-badge normal" id="badgeMorfologia">—</span>
+          <span class="card-chevron">▼</span>
+        </div>
+        <div class="card-body" id="bodyMorfologia"></div>
+      </div>
+
+      <!-- Isquemia -->
+      <div class="report-section-card">
+        <div class="card-header" data-target="bodyIsquemia">
+          <span class="card-icon">🔬</span>
+          <span class="card-title">Hallazgos Isquémicos</span>
+          <span class="card-badge normal" id="badgeIsquemia">—</span>
+          <span class="card-chevron">▼</span>
+        </div>
+        <div class="card-body" id="bodyIsquemia"></div>
+      </div>
+
+      <!-- Intervalos -->
+      <div class="report-section-card">
+        <div class="card-header" data-target="bodyIntervalos">
+          <span class="card-icon">📏</span>
+          <span class="card-title">Intervalos y Duración</span>
+          <span class="card-badge normal" id="badgeIntervalos">—</span>
+          <span class="card-chevron">▼</span>
+        </div>
+        <div class="card-body" id="bodyIntervalos"></div>
+      </div>
+
+    </main>
+  </div>
+
   <script>
-    // Load image from sessionStorage (demo only)
-    const imgEl = document.getElementById('ekgImg');
-    const stored = sessionStorage.getItem('ekgImage');
-    if (stored) {
-      imgEl.src = stored;
+    // ── Config ─────────────────────────────────────────────────
+    const URGENCY_MAP = {
+      'normal':                  { cls: 'normal',    icon: '🟢', label: 'NORMAL' },
+      'hallazgos inespecíficos': { cls: 'caution',   icon: '🔵', label: 'HALLAZGOS INESPECÍFICOS' },
+      'atención':                { cls: 'attention', icon: '🟠', label: 'ATENCIÓN REQUERIDA' },
+      'atención requerida':      { cls: 'attention', icon: '🟠', label: 'ATENCIÓN REQUERIDA' },
+      'urgente':                 { cls: 'urgent',    icon: '🔴', label: 'URGENTE' },
+    };
+
+    function resolveUrgency(raw) {
+      if (!raw) return URGENCY_MAP['normal'];
+      return URGENCY_MAP[raw.toLowerCase().trim()] || { cls: 'caution', icon: '🔵', label: raw.toUpperCase() };
     }
+
+    // ── Load data ───────────────────────────────────────────────
+    const img = document.getElementById('ekgImg');
+    const placeholder = document.getElementById('ekgPlaceholder');
+    const storedImg = sessionStorage.getItem('ekgImage');
+    if (storedImg) {
+      img.src = storedImg;
+      img.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+    }
+
+    const raw = sessionStorage.getItem('ekgResult');
+    let report = null;
+    try { report = raw ? JSON.parse(raw) : null; } catch {}
+
+    if (!report) {
+      document.getElementById('conceptoText').textContent =
+        'No se encontró un reporte. Por favor regresa y sube una imagen.';
+    } else {
+      renderReport(report);
+    }
+
+    // ── Render ──────────────────────────────────────────────────
+    function renderReport(r) {
+      // Global urgency
+      const urgInfo = resolveUrgency(r.urgencia);
+      const badge = document.getElementById('urgencyBadge');
+      badge.className = `urgency-badge ${urgInfo.cls}`;
+      badge.querySelector('.u-icon').textContent = urgInfo.icon;
+      document.getElementById('urgencyValue').textContent = urgInfo.label;
+
+      // Meta
+      document.getElementById('metaDiagnostico').textContent =
+        r.diagnostico_principal || r.diagnostico || '—';
+      document.getElementById('metaRecomendacion').textContent =
+        r.recomendacion || '—';
+
+      // Synthesis / concepto clínico
+      const conceptoRaw = r.concepto_clinico || r.concepto || r.diagnostico_principal || '—';
+      document.getElementById('conceptoText').textContent = conceptoRaw;
+
+      // Individual agents
+      const hallazgos = r.hallazgos || {};
+      renderAgent('bodyRitmo',      'badgeRitmo',      hallazgos.ritmo,      'ritmo');
+      renderAgent('bodyMorfologia', 'badgeMorfologia', hallazgos.morfologia, 'morfologia');
+      renderAgent('bodyIsquemia',   'badgeIsquemia',   hallazgos.isquemia,   'isquemia');
+      renderAgent('bodyIntervalos', 'badgeIntervalos', hallazgos.intervalos, 'intervalos');
+    }
+
+    function renderAgent(bodyId, badgeId, data, type) {
+      const body  = document.getElementById(bodyId);
+      const badge = document.getElementById(badgeId);
+      if (!data) {
+        body.innerHTML = '<p class="finding-item">Sin datos disponibles.</p>';
+        return;
+      }
+
+      const urgInfo = resolveUrgency(data.urgencia);
+      badge.className = `card-badge ${urgInfo.cls}`;
+      badge.textContent = urgInfo.label;
+
+      let html = '';
+
+      // Type-specific fields
+      if (type === 'ritmo') {
+        if (data.frecuencia)  html += kvRow('Frecuencia', data.frecuencia);
+        if (data.regularidad) html += kvRow('Regularidad', data.regularidad);
+        if (data.origen)      html += kvRow('Origen', data.origen);
+        if (data.arritmias && data.arritmias.length)
+          html += kvRow('Arritmias', data.arritmias.join(', '));
+      }
+
+      if (type === 'intervalos') {
+        if (data.pr)  html += kvRow('PR', data.pr);
+        if (data.qrs) html += kvRow('QRS', data.qrs);
+        if (data.qtc) html += kvRow('QTc', data.qtc);
+      }
+
+      if (type === 'morfologia') {
+        if (data.eje)     html += kvRow('Eje eléctrico', data.eje);
+        if (data.onda_p)  html += kvRow('Onda P', data.onda_p);
+        if (data.onda_t)  html += kvRow('Onda T', data.onda_t);
+        if (data.voltajes) html += kvRow('Voltajes', data.voltajes);
+      }
+
+      if (type === 'isquemia') {
+        if (data.st)         html += kvRow('Segmento ST', data.st);
+        if (data.territorio) html += kvRow('Territorio', data.territorio);
+        if (data.patron)     html += kvRow('Patrón', data.patron);
+      }
+
+      // Generic hallazgos array (all agent types)
+      const findings = data.hallazgos || data.findings;
+      if (findings && findings.length) {
+        html += findings.map(f => `<div class="finding-item">${escHtml(f)}</div>`).join('');
+      }
+
+      // Comment
+      if (data.comentario) {
+        html += `<p class="card-comment">${escHtml(data.comentario)}</p>`;
+      }
+
+      body.innerHTML = html || '<div class="finding-item">Sin hallazgos reportados.</div>';
+    }
+
+    function kvRow(label, value) {
+      return `<div class="kv-row"><span class="kv-label">${label}:</span><span class="kv-value">${escHtml(String(value))}</span></div>`;
+    }
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Collapsible cards ───────────────────────────────────────
+    document.querySelectorAll('.card-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const targetId = header.dataset.target;
+        const body = document.getElementById(targetId);
+        if (!body) return;
+        const isOpen = body.classList.contains('open');
+        body.classList.toggle('open', !isOpen);
+        header.classList.toggle('open', !isOpen);
+      });
+    });
+
+    // ── Navigation ──────────────────────────────────────────────
     document.getElementById('newAnalysisBtn').addEventListener('click', () => {
       sessionStorage.removeItem('ekgImage');
+      sessionStorage.removeItem('ekgResult');
       window.location.href = 'index.html';
     });
   </script>

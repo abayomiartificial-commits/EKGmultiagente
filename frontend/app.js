@@ -4,7 +4,7 @@
    ============================================= */
 
 // ── API URL dinámica: localhost en dev, Cloud Run en producción ───────────
-const CLOUD_RUN_URL = 'https://ekg-backend-XXXXXXXXXX-uc.a.run.app'; // ← actualizar tras primer deploy
+const CLOUD_RUN_URL = 'https://ekg-backend-30374884403-uc.a.run.app';
 const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:8080/analyze'
   : `${CLOUD_RUN_URL}/analyze`;

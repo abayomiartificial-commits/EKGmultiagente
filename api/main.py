@@ -16,7 +16,11 @@ load_dotenv(dotenv_path=env_path)
 OPENAI_API_BASE = os.getenv("OPENAI_API_BASE", "https://openrouter.ai/api/v1")
 OPENAI_API_KEY  = os.getenv("OPENAI_API_KEY", "sk-or-dummy")
 MODEL_NAME      = os.getenv("MODEL_NAME", "google/gemini-2.5-flash-preview")
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+
+# Parsear ALLOWED_ORIGINS: soporta lista CSV o "*"
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "*")
+ALLOWED_ORIGINS = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+ALLOW_CREDENTIALS = "*" not in ALLOWED_ORIGINS  # credentials=True es incompatible con wildcard
 
 client = AsyncOpenAI(
     base_url=OPENAI_API_BASE,
@@ -28,7 +32,7 @@ app = FastAPI(title="EKG Multi-Agente API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_credentials=ALLOW_CREDENTIALS,
     allow_methods=["*"],
     allow_headers=["*"],
 )

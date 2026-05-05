@@ -88,10 +88,7 @@ jobs:
           MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
           FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT }}
         run: |
-          printf 'OPENAI_API_BASE: "https://openrouter.ai/api/v1"\nMODEL_NAME: "%s"\nOPENAI_API_KEY: "%s"\nALLOWED_ORIGINS: "https://%s.web.app,https://%s.firebaseapp.com"\n' \
-            "$MODEL_NAME" "$MODEL_API_KEY" "$FIREBASE_PROJECT" "$FIREBASE_PROJECT" \
-            > /tmp/env.yaml
-
+          # Use ^|^ as separator so commas inside values (ALLOWED_ORIGINS) are preserved
           gcloud run deploy ekg-backend \
             --image "$IMAGE" \
             --region "$GCP_REGION" \
@@ -101,5 +98,4 @@ jobs:
             --memory 512Mi \
             --cpu 1 \
             --timeout 120 \
-            --env-vars-file /tmp/env.yaml
-
+            --update-env-vars "^|^OPENAI_API_BASE=https://openrouter.ai/api/v1|MODEL_NAME=${MODEL_NAME}|OPENAI_API_KEY=${MODEL_API_KEY}|ALLOWED_ORIGINS=https://${FIREBASE_PROJECT}.web.app,https://${FIREBASE_PROJECT}.firebaseapp.com"

@@ -122,12 +122,12 @@ async def analyze_ekg(file: UploadFile = File(...)):
             "intervalos": results[3]
         }
         
-        # 2. Ejecutar el Agente de Síntesis con los resultados combinados
+        # 2. Ejecutar el Agente de Síntesis (solo texto, no necesita la imagen)
         synthesis_prompt = read_skill_prompt("ekg-sintesis")
         synthesis_content = (
             f"{synthesis_prompt}\n\n"
-            f"HALLAZGOS DE AGENTES PREVIOS:\n{json.dumps(combined_findings, indent=2)}\n\n"
-            "Genera el reporte final. Responde SOLO en formato JSON válido, sin bloques de código markdown."
+            f"HALLAZGOS DE LOS AGENTES ESPECIALIZADOS:\n{json.dumps(combined_findings, indent=2, ensure_ascii=False)}\n\n"
+            "Genera el reporte final en JSON válido estricto. Sin bloques de código, sin texto adicional."
         )
         
         synth_response = await client.chat.completions.create(
@@ -135,39 +135,32 @@ async def analyze_ekg(file: UploadFile = File(...)):
             messages=[
                 {
                     "role": "user",
-                    "content": [
-                        {"type": "text", "text": synthesis_content},
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{base64_image}"
-                            }
-                        }
-                    ]
+                    "content": synthesis_content   # solo texto, sin imagen
                 }
             ],
-            max_tokens=1500,
+            max_tokens=800,
             temperature=0.2
         )
         synth_content = synth_response.choices[0].message.content.strip()
-        if synth_content.startswith("```json"):
-            synth_content = synth_content.replace("```json\n", "", 1).replace("```", "")
-        elif synth_content.startswith("```"):
-            synth_content = synth_content.replace("```\n", "", 1).replace("```", "")
+        # Limpiar cualquier wrapper markdown que el modelo pueda agregar
+        if "```json" in synth_content:
+            synth_content = synth_content.split("```json")[1].split("```")[0].strip()
+        elif "```" in synth_content:
+            synth_content = synth_content.split("```")[1].split("```")[0].strip()
             
         try:
             final_report = json.loads(synth_content)
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as je:
+            print(f"JSONDecodeError en síntesis: {je} | Contenido: {synth_content[:200]}")
             final_report = {
-                 "diagnostico_principal": "Revisión manual requerida (Error de formato IA)",
+                 "diagnostico_principal": "Revisión manual requerida",
                  "urgencia": "Atención",
-                 "hallazgos": combined_findings,
-                 "recomendacion": "El modelo no devolvió un JSON válido. Revisa los hallazgos individuales."
+                 "recomendacion": "El modelo no devolvió un JSON válido. Revisa los hallazgos individuales.",
+                 "aviso": "Este informe es una ayuda clínica y no reemplaza la valoración médica."
             }
         
-        # Aseguramos que los hallazgos individuales vayan dentro del JSON final para mostrarlos en el frontend
-        if "hallazgos" not in final_report or not isinstance(final_report["hallazgos"], dict):
-            final_report["hallazgos"] = combined_findings
+        # Asegurar que los hallazgos individuales estén presentes
+        final_report["hallazgos"] = combined_findings
             
         return JSONResponse(content=final_report)
         

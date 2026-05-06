@@ -95,7 +95,7 @@ jobs:
             --project "$GCP_PROJECT" \
             --platform managed \
             --allow-unauthenticated \
-            --memory 512Mi \
+            --memory 1Gi \
             --cpu 1 \
-            --timeout 120 \
+            --timeout 300 \
             --update-env-vars "^|^OPENAI_API_BASE=https://openrouter.ai/api/v1|MODEL_NAME=${MODEL_NAME}|OPENAI_API_KEY=${MODEL_API_KEY}|ALLOWED_ORIGINS=https://${FIREBASE_PROJECT}.web.app,https://${FIREBASE_PROJECT}.firebaseapp.com"

@@ -15,8 +15,9 @@ load_dotenv(dotenv_path=env_path)
 # ── Configuración: leer env vars ANTES de crear la app ──────────────────────
 OPENAI_API_BASE = os.getenv("OPENAI_API_BASE", "https://openrouter.ai/api/v1")
 OPENAI_API_KEY  = os.getenv("OPENAI_API_KEY", "sk-or-dummy")
-MODEL_NAME      = os.getenv("MODEL_NAME", "google/gemini-2.5-flash-preview")
-
+MODEL_NAME      = os.getenv("MODEL_NAME", "google/gemini-2.5-flash")
+if MODEL_NAME == "google/gemini-2.5-flash-preview":
+    MODEL_NAME = "google/gemini-2.5-flash"
 # CORS: acepta todos los orígenes por defecto (configurable via ALLOWED_ORIGINS)
 _raw_origins = os.getenv("ALLOWED_ORIGINS", "*")
 ALLOWED_ORIGINS = [o.strip() for o in _raw_origins.split(",") if o.strip()] or ["*"]
@@ -130,32 +131,41 @@ async def analyze_ekg(file: UploadFile = File(...)):
             "Genera el reporte final en JSON válido estricto. Sin bloques de código, sin texto adicional."
         )
         
-        synth_response = await client.chat.completions.create(
-            model=MODEL_NAME,
-            messages=[
-                {
-                    "role": "user",
-                    "content": synthesis_content   # solo texto, sin imagen
-                }
-            ],
-            max_tokens=800,
-            temperature=0.2
-        )
-        synth_content = synth_response.choices[0].message.content.strip()
-        # Limpiar cualquier wrapper markdown que el modelo pueda agregar
-        if "```json" in synth_content:
-            synth_content = synth_content.split("```json")[1].split("```")[0].strip()
-        elif "```" in synth_content:
-            synth_content = synth_content.split("```")[1].split("```")[0].strip()
-            
         try:
-            final_report = json.loads(synth_content)
-        except json.JSONDecodeError as je:
-            print(f"JSONDecodeError en síntesis: {je} | Contenido: {synth_content[:200]}")
+            synth_response = await client.chat.completions.create(
+                model=MODEL_NAME,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": synthesis_content   # solo texto, sin imagen
+                    }
+                ],
+                max_tokens=800,
+                temperature=0.2
+            )
+            synth_content = synth_response.choices[0].message.content.strip()
+            # Limpiar cualquier wrapper markdown que el modelo pueda agregar
+            if "```json" in synth_content:
+                synth_content = synth_content.split("```json")[1].split("```")[0].strip()
+            elif "```" in synth_content:
+                synth_content = synth_content.split("```")[1].split("```")[0].strip()
+                
+            try:
+                final_report = json.loads(synth_content)
+            except json.JSONDecodeError as je:
+                print(f"JSONDecodeError en síntesis: {je} | Contenido: {synth_content[:200]}")
+                final_report = {
+                     "diagnostico_principal": "Revisión manual requerida",
+                     "urgencia": "Atención",
+                     "recomendacion": "El modelo no devolvió un JSON válido. Revisa los hallazgos individuales.",
+                     "aviso": "Este informe es una ayuda clínica y no reemplaza la valoración médica."
+                }
+        except Exception as synth_error:
+            print(f"Error in synthesis agent: {synth_error}")
             final_report = {
-                 "diagnostico_principal": "Revisión manual requerida",
+                 "diagnostico_principal": "Error en el Agente de Síntesis",
                  "urgencia": "Atención",
-                 "recomendacion": "El modelo no devolvió un JSON válido. Revisa los hallazgos individuales.",
+                 "recomendacion": f"El agente de síntesis falló al procesar los hallazgos: {synth_error}",
                  "aviso": "Este informe es una ayuda clínica y no reemplaza la valoración médica."
             }
         
